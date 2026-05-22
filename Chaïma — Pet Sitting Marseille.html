@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Chaïma — Pet Sitting Marseille</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══ RESET & BASE ═══════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:#F5EEF8;
+  color:#1A1230;
+  min-height:100vh;
+  font-size:15px;
+  line-height:1.55;
+  overflow-x:hidden;
+}
+
+/* ═══ VARIABLES ══════════════════════════════════════════ */
+:root{
+  --v900:#2D1B5E;--v800:#3D2680;--v700:#5236A6;--v600:#6B4CC4;--v500:#8B6CD8;
+  --r700:#C2336E;--r500:#E06898;--r300:#F0A8C8;--r100:#FDE8F3;
+  --gold:#E8C547;
+  --bg:#F5EEF8;--srf:#FFFFFF;--srf2:#FAF5FF;
+  --text:#1A1230;--muted:#7060A0;--border:#E2D5F5;
+  --green:#1A6B46;--gbg:#E6F7EE;
+  --wbg:#FFF8E6;--warn:#B87A00;
+  --ebg:#FEF0F4;--err:#C0284A;
+  --rad:14px;--rads:10px;
+  --sh:0 2px 16px rgba(83,54,166,.10);
+  --sh-lg:0 8px 32px rgba(83,54,166,.18);
+}
+
+/* ═══ HEADER ═════════════════════════════════════════════ */
+header{
+  background:linear-gradient(150deg,var(--v900) 0%,var(--v700) 55%,var(--r700) 100%);
+  padding:20px 16px 18px;
+  position:relative;overflow:hidden;
+}
+header::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 80% 0%,rgba(224,104,152,.3) 0%,transparent 55%);
+  pointer-events:none;
+}
+.hdr-inner{position:relative;z-index:1;text-align:center;}
+.hdr-brand{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:2px;}
+.hdr-brand h1{
+  font-family:'Fraunces',serif;font-size:clamp(20px,6vw,32px);
+  color:#fff;font-weight:900;letter-spacing:-.3px;
+}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,.68);font-weight:300;letter-spacing:.3px;margin-top:2px;}
+.hdr-pill{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(232,197,71,.18);border:1.5px solid rgba(232,197,71,.45);
+  color:var(--gold);font-size:11px;font-weight:700;
+  padding:4px 13px;border-radius:999px;margin-top:10px;letter-spacing:.2px;
+}
+.hdr-login{
+  position:absolute;top:14px;right:14px;z-index:2;
+  background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.3);
+  color:rgba(255,255,255,.92);border-radius:999px;padding:6px 12px;
+  font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;cursor:pointer;
+  backdrop-filter:blur(8px);white-space:nowrap;
+}
+
+/* ═══ NAV ════════════════════════════════════════════════ */
+nav{
+  background:var(--srf);
+  border-bottom:1.5px solid var(--border);
+  position:sticky;top:0;z-index:100;
+  box-shadow:0 2px 10px rgba(83,54,166,.07);
+  display:flex;overflow-x:auto;
+  scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+}
+nav::-webkit-scrollbar{display:none;}
+nav button{
+  flex:0 0 auto;
+  padding:12px 14px;
+  font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;
+  color:var(--muted);background:none;border:none;cursor:pointer;
+  border-bottom:2.5px solid transparent;
+  white-space:nowrap;
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  transition:color .15s,border-color .15s;
+}
+nav button span.ni{font-size:15px;}
+nav button.active{color:var(--v700);border-bottom-color:var(--v700);font-weight:600;}
+
+/* ═══ MAIN ═══════════════════════════════════════════════ */
+main{max-width:600px;margin:0 auto;padding:18px 14px 80px;}
+.tab{display:none;}
+.tab.active{display:block;animation:fadeUp .28s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes pop{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
+
+/* ═══ TYPOGRAPHY HELPERS ════════════════════════════════ */
+.sec{
+  font-family:'Fraunces',serif;font-size:16px;font-weight:700;
+  color:var(--v800);margin-bottom:12px;
+  display:flex;align-items:center;gap:8px;
+}
+.sec-num{
+  width:24px;height:24px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--v700),var(--r700));
+  color:#fff;font-size:11px;font-weight:700;font-family:'DM Sans',sans-serif;
+  display:flex;align-items:center;justify-content:center;
+}
+
+/* ═══ CARDS ══════════════════════════════════════════════ */
+.card{
+  background:var(--srf);border-radius:var(--rad);
+  border:1.5px solid var(--border);padding:16px;
+  margin-bottom:12px;box-shadow:var(--sh);
+}
+
+/* ═══ BANNERS ════════════════════════════════════════════ */
+.banner{border-radius:var(--rads);padding:11px 13px;margin-bottom:12px;font-size:13px;line-height:1.55;font-weight:500;}
+.b-info{background:#EEF4FF;border:1.5px solid #9BB5F0;color:#2040A0;}
+.b-promo{background:linear-gradient(135deg,#F0E8FF,#FFE8F4);border:1.5px solid var(--r300);color:var(--v900);}
+.b-warn{background:var(--wbg);border:1.5px solid #F0C855;color:var(--warn);}
+.banner strong{font-weight:700;}
+
+/* ═══ DATE PICKER ════════════════════════════════════════ */
+.date-boxes{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+.dbox{
+  border:1.5px solid var(--border);border-radius:var(--rads);
+  padding:11px 12px;cursor:pointer;background:var(--srf2);
+  transition:border-color .15s,box-shadow .15s;
+}
+.dbox.active{border-color:var(--v700);background:#fff;box-shadow:0 0 0 3px rgba(107,76,196,.12);}
+.dbox-lbl{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;}
+.dbox-val{font-family:'Fraunces',serif;font-size:14px;color:var(--v800);margin-top:2px;font-weight:700;}
+.dbox-val.ph{color:var(--muted);font-size:13px;font-family:'DM Sans',sans-serif;font-weight:400;}
+
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.cal-arr{
+  width:32px;height:32px;border-radius:50%;
+  background:var(--srf2);border:1.5px solid var(--border);
+  color:var(--v700);font-size:16px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+}
+.cal-arr:hover{background:var(--r100);}
+.cal-month{font-family:'Fraunces',serif;font-size:15px;color:var(--v800);font-weight:700;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
+.cal-lbl{text-align:center;font-size:9px;font-weight:700;color:var(--muted);padding-bottom:4px;text-transform:uppercase;letter-spacing:.3px;}
+.cal-day{
+  aspect-ratio:1;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:clamp(11px,3vw,13px);font-weight:500;
+  cursor:pointer;border:1.5px solid transparent;
+  background:transparent;color:var(--text);
+  transition:all .1s;position:relative;
+}
+.cal-day.avail:hover{background:var(--r100);transform:scale(1.1);}
+.cal-day.blocked{background:#FFE8E8!important;color:#C0284A!important;cursor:not-allowed!important;border-color:#F0B0B0!important;font-size:10px;}
+.cal-day.start-d{background:var(--v800)!important;color:#fff!important;}
+.cal-day.end-d{background:var(--r700)!important;color:#fff!important;}
+.cal-day.in-r{background:#EDE5FF!important;color:var(--v700)!important;border-radius:0!important;}
+.cal-day.in-r.start-d{border-radius:50% 0 0 50%!important;}
+.cal-day.in-r.end-d{border-radius:0 50% 50% 0!important;}
+.cal-day.today{border-color:var(--r500);}
+.cal-day.disabled{opacity:.3;cursor:not-allowed;}
+.cal-day.empty{background:transparent!important;cursor:default;}
+.cal-legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;}
+.leg-i{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);}
+.leg-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.leg-bar{width:16px;height:7px;border-radius:2px;flex-shrink:0;}
+
+/* ═══ VISIT OPTIONS ══════════════════════════════════════ */
+.vo-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.vo{
+  border:1.5px solid var(--border);border-radius:var(--rads);
+  padding:15px 8px;cursor:pointer;background:var(--srf2);
+  text-align:center;transition:all .12s;
+}
+.vo:hover{border-color:var(--r500);background:var(--r100);}
+.vo.sel{border-color:var(--v700);background:#EDE5FF;box-shadow:0 0 0 3px rgba(107,76,196,.1);}
+.vo-emoji{font-size:22px;margin-bottom:4px;}
+.vo-title{font-family:'Fraunces',serif;font-size:14px;color:var(--v800);font-weight:700;}
+.vo-sub{font-size:11px;color:var(--muted);margin-top:1px;}
+
+/* ═══ VISIT ROW ══════════════════════════════════════════ */
+.vrow{background:var(--srf2);border-radius:var(--rads);padding:14px;margin-bottom:8px;border:1.5px solid var(--border);}
+.vrow:last-child{margin-bottom:0;}
+.vrow-title{font-family:'Fraunces',serif;font-size:14px;color:var(--v800);margin-bottom:10px;font-weight:700;}
+.dur-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px;}
+.dbtn{
+  padding:10px 4px;border-radius:var(--rads);
+  border:1.5px solid var(--border);background:var(--srf);
+  cursor:pointer;text-align:center;transition:all .12s;position:relative;overflow:hidden;
+}
+.dbtn:hover:not(.blk){border-color:var(--r500);background:var(--r100);}
+.dbtn.sel{border-color:var(--v700);background:#EDE5FF;}
+.dbtn.blk{opacity:.3;cursor:not-allowed;}
+.db-label{font-family:'Fraunces',serif;font-size:12px;color:var(--v800);font-weight:700;}
+.db-price{font-size:13px;font-weight:700;color:var(--green);margin-top:2px;}
+.db-old{font-size:11px;color:var(--muted);text-decoration:line-through;}
+.db-badge{font-size:9px;font-weight:700;color:var(--r700);background:var(--r100);border-radius:4px;padding:2px 5px;margin-top:2px;display:inline-block;}
+.db-blk-lbl{font-size:9px;color:var(--err);font-weight:700;margin-top:2px;}
+
+.t-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.t-lbl{font-size:12px;font-weight:600;color:var(--muted);white-space:nowrap;}
+.t-inp{
+  border:1.5px solid var(--border);border-radius:8px;
+  padding:9px 11px;font-family:'DM Sans',sans-serif;font-size:15px;
+  color:var(--text);background:white;outline:none;
+  transition:border .12s;min-width:0;flex:1;max-width:160px;
+}
+.t-inp:focus{border-color:var(--v700);box-shadow:0 0 0 3px rgba(107,76,196,.1);}
+.t-inp.conflict{border-color:var(--err);background:var(--ebg);}
+.t-warn{font-size:11px;color:var(--err);font-weight:600;margin-top:6px;display:none;background:var(--ebg);border-radius:6px;padding:5px 9px;}
+.t-blk-info{font-size:11px;color:var(--warn);background:var(--wbg);border-radius:6px;padding:5px 9px;margin-top:5px;display:none;}
+
+/* ═══ WEEK OFFER ═════════════════════════════════════════ */
+.week-card{
+  background:linear-gradient(135deg,var(--v900),var(--v700),var(--r700));
+  border-radius:var(--rad);padding:15px 16px;margin-bottom:12px;
+  cursor:pointer;border:2px solid transparent;
+  transition:all .15s;position:relative;overflow:hidden;
+}
+.week-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 0%,rgba(255,255,255,.1),transparent 55%);pointer-events:none;}
+.week-card:hover{transform:translateY(-1px);box-shadow:var(--sh-lg);}
+.week-card.sel{border-color:var(--gold);box-shadow:0 0 0 3px rgba(232,197,71,.3);}
+.wc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
+.wc-title{font-family:'Fraunces',serif;font-size:16px;color:var(--gold);font-weight:900;position:relative;}
+.wc-check{font-size:18px;flex-shrink:0;}
+.wc-desc{font-size:12px;color:rgba(255,255,255,.75);margin-top:5px;line-height:1.5;position:relative;font-weight:300;}
+
+/* ═══ PRICE SUMMARY ══════════════════════════════════════ */
+.price-card{
+  background:linear-gradient(135deg,var(--v900) 0%,var(--v700) 60%,var(--r700) 100%);
+  border-radius:var(--rad);padding:18px;margin-bottom:12px;
+  position:relative;overflow:hidden;
+}
+.price-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% -20%,rgba(224,104,152,.3),transparent 60%);pointer-events:none;}
+.pc-title{font-family:'Fraunces',serif;font-size:15px;color:rgba(255,255,255,.9);margin-bottom:12px;position:relative;font-weight:700;}
+.pc-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;font-size:13px;color:rgba(255,255,255,.72);position:relative;}
+.pc-row.total{border-top:1px solid rgba(255,255,255,.2);padding-top:10px;margin-top:8px;font-size:14px;color:#fff;font-weight:600;}
+.pc-val{font-family:'Fraunces',serif;font-size:14px;color:rgba(255,255,255,.9);}
+.pc-row.total .pc-val{font-size:24px;color:var(--gold);}
+.pc-saving{background:rgba(255,255,255,.12);border-radius:7px;padding:7px 11px;margin-top:9px;font-size:12px;color:#B8FFB0;font-weight:600;text-align:center;position:relative;}
+.pc-ph{text-align:center;padding:14px;color:rgba(255,255,255,.45);font-size:13px;}
+
+/* ═══ FORM ═══════════════════════════════════════════════ */
+.form-row{margin-bottom:12px;}
+.form-lbl{display:block;font-size:10px;font-weight:700;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.7px;}
+.form-lbl .req{color:var(--r700);}
+.finp,.fsel,.ftxt{
+  width:100%;padding:10px 13px;border-radius:var(--rads);
+  border:1.5px solid var(--border);font-family:'DM Sans',sans-serif;
+  font-size:14px;color:var(--text);background:var(--srf2);outline:none;
+  transition:all .12s;-webkit-appearance:none;appearance:none;
+}
+.finp:focus,.fsel:focus,.ftxt:focus{border-color:var(--v600);background:#fff;box-shadow:0 0 0 3px rgba(107,76,196,.1);}
+.ftxt{resize:vertical;min-height:68px;}
+
+.chip-row{display:flex;gap:7px;flex-wrap:wrap;}
+.chip{
+  padding:7px 16px;border-radius:999px;
+  border:1.5px solid var(--border);background:var(--srf2);
+  color:var(--muted);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;
+  cursor:pointer;transition:all .12s;
+}
+.chip.sel{background:var(--v700);border-color:var(--v700);color:#fff;}
+
+.btn-confirm{
+  width:100%;padding:15px;
+  background:linear-gradient(135deg,var(--v700),var(--r700));
+  color:#fff;border:none;border-radius:var(--rads);
+  font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;
+  cursor:pointer;letter-spacing:.3px;
+  box-shadow:0 4px 18px rgba(107,76,196,.35);
+  transition:all .15s;
+}
+.btn-confirm:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 6px 24px rgba(107,76,196,.4);}
+.btn-confirm:disabled{opacity:.4;cursor:not-allowed;box-shadow:none;}
+
+.pay-note{background:var(--gbg);border:1.5px solid #7ACA9A;border-radius:8px;padding:10px 13px;font-size:13px;color:var(--green);margin-bottom:10px;font-weight:600;}
+.dog-note{background:#FFF5E8;border:1.5px solid #FFBB66;border-radius:8px;padding:10px 13px;font-size:13px;color:#8B5200;margin-bottom:10px;font-weight:500;}
+
+/* ═══ TARIFS PAGE ════════════════════════════════════════ */
+.tarifs-title{font-family:'Fraunces',serif;font-size:22px;font-weight:900;color:var(--v800);margin-bottom:4px;}
+.tarifs-sub{font-size:13px;color:var(--muted);margin-bottom:16px;}
+.tarifs-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.tc{
+  background:var(--srf);border-radius:var(--rad);
+  border:1.5px solid var(--border);padding:16px 12px;text-align:center;
+  box-shadow:var(--sh);transition:transform .15s;position:relative;overflow:hidden;
+}
+.tc:hover{transform:translateY(-2px);box-shadow:var(--sh-lg);}
+.tc.hl{
+  background:linear-gradient(135deg,var(--v900),var(--v700),var(--r700));
+  border-color:transparent;grid-column:1/-1;
+}
+.t-em{font-size:26px;margin-bottom:7px;}
+.t-lbl2{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:3px;}
+.tc.hl .t-lbl2{color:rgba(255,255,255,.6);}
+.t-pnew{font-family:'Fraunces',serif;font-size:28px;color:var(--v800);font-weight:900;line-height:1;}
+.tc.hl .t-pnew{color:var(--gold);font-size:32px;}
+.t-pold{font-size:13px;color:var(--muted);text-decoration:line-through;margin-top:2px;}
+.t-pbadge{display:inline-block;background:var(--r100);color:var(--r700);font-size:10px;font-weight:700;border-radius:5px;padding:2px 8px;margin-top:5px;}
+.tc.hl .t-pbadge{background:rgba(255,255,255,.15);color:var(--gold);}
+.t-note2{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.4;}
+.tc.hl .t-note2{color:rgba(255,255,255,.7);}
+.t-div{width:28px;height:2px;background:var(--r300);margin:7px auto;}
+.tc.hl .t-div{background:rgba(255,255,255,.25);}
+.tc .ribbon{
+  position:absolute;top:10px;right:-16px;
+  background:var(--r700);color:#fff;font-size:9px;font-weight:700;
+  padding:3px 22px;transform:rotate(35deg);letter-spacing:.3px;
+}
+.tarif-extra{background:var(--srf);border-radius:var(--rads);border:1.5px solid var(--border);padding:13px;font-size:13px;color:var(--text);margin-bottom:12px;line-height:1.6;box-shadow:var(--sh);}
+
+/* ═══ RESERVATIONS ═══════════════════════════════════════ */
+.resa-card{
+  background:var(--srf);border-radius:var(--rad);
+  padding:14px;margin-bottom:10px;border:1.5px solid var(--border);
+  box-shadow:var(--sh);animation:fadeUp .25s ease;
+}
+.resa-top{display:flex;align-items:flex-start;gap:10px;}
+.resa-icon{font-size:26px;flex-shrink:0;}
+.resa-body{flex:1;min-width:0;}
+.resa-nm{font-weight:700;font-size:14px;color:var(--v800);}
+.resa-info{font-size:12px;color:var(--muted);margin-top:2px;line-height:1.5;}
+.resa-bdg{font-size:11px;font-weight:600;padding:3px 10px;border-radius:999px;white-space:nowrap;flex-shrink:0;}
+.bdg-p{background:var(--wbg);color:var(--warn);}
+.bdg-a{background:var(--gbg);color:var(--green);}
+.bdg-r{background:var(--ebg);color:var(--err);}
+.creno-block{background:var(--srf2);border-radius:7px;padding:7px 10px;margin-top:6px;font-size:12px;color:var(--v800);border:1.5px solid var(--border);}
+.code-tag{font-family:'DM Sans',sans-serif;background:var(--v800);color:#fff;border-radius:4px;padding:2px 7px;font-size:11px;letter-spacing:1.5px;font-weight:700;}
+.btn-cancel{background:none;border:1.5px solid var(--r300);border-radius:6px;color:var(--r700);font-size:11px;font-weight:600;padding:4px 10px;cursor:pointer;margin-top:6px;}
+.btn-cancel:hover{background:var(--r100);}
+
+/* ═══ LOGIN CARD ═════════════════════════════════════════ */
+.login-card{background:var(--srf);border-radius:var(--rad);border:1.5px solid var(--border);padding:22px 16px;margin-bottom:14px;text-align:center;box-shadow:var(--sh);}
+.login-card h2{font-family:'Fraunces',serif;font-size:19px;color:var(--v800);margin-bottom:5px;}
+.login-card p{font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.5;}
+.ubar{
+  background:var(--srf2);border-radius:var(--rads);
+  padding:10px 13px;margin-bottom:12px;
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:13px;font-weight:600;color:var(--v800);border:1.5px solid var(--border);gap:8px;
+}
+.ubar.admin-bar{background:linear-gradient(135deg,var(--v900),var(--v700));color:#fff!important;border-color:transparent!important;}
+.ubar span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.ubar button{background:none;border:1.5px solid currentColor;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:600;cursor:pointer;flex-shrink:0;opacity:.8;}
+.ubar button:hover{opacity:1;}
+
+/* ═══ ADMIN ══════════════════════════════════════════════ */
+.admin-tabs{display:flex;gap:7px;margin-bottom:14px;flex-wrap:wrap;}
+.atab{padding:7px 15px;border-radius:999px;border:1.5px solid var(--border);background:var(--srf);color:var(--muted);font-size:12px;font-weight:600;cursor:pointer;}
+.atab.active{background:var(--v700);color:#fff;border-color:var(--v700);}
+.filter-bar{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;}
+.filt{padding:6px 13px;border-radius:999px;border:1.5px solid var(--border);background:var(--srf);color:var(--muted);font-size:12px;font-weight:600;cursor:pointer;}
+.filt.active{background:var(--v700);color:#fff;border-color:var(--v700);}
+.admin-resa{background:var(--srf);border-radius:var(--rad);padding:14px;margin-bottom:10px;border:1.5px solid var(--border);box-shadow:var(--sh);}
+.ar-head{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;}
+.ar-name{font-weight:700;font-size:14px;color:var(--v800);flex:1;min-width:0;}
+.ar-info{font-size:12px;color:var(--muted);line-height:1.7;}
+.ar-acts{display:flex;gap:6px;margin-top:9px;flex-wrap:wrap;}
+.btn-acc{background:var(--gbg);border:1.5px solid var(--green);border-radius:7px;color:var(--green);font-size:12px;font-weight:600;padding:7px 12px;cursor:pointer;}
+.btn-ref{background:var(--ebg);border:1.5px solid var(--err);border-radius:7px;color:var(--err);font-size:12px;font-weight:600;padding:7px 12px;cursor:pointer;}
+.btn-call{background:#EEF4FF;border:1.5px solid #9BB5F0;border-radius:7px;color:#2040A0;font-size:12px;font-weight:600;padding:7px 12px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:4px;}
+.btn-mail{background:var(--r100);border:1.5px solid var(--r300);border-radius:7px;color:var(--r700);font-size:12px;font-weight:600;padding:7px 12px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:4px;}
+
+/* ═══ BLOCK PANEL ════════════════════════════════════════ */
+.block-panel{background:var(--srf);border-radius:var(--rad);border:1.5px solid var(--border);padding:16px;margin-bottom:12px;box-shadow:var(--sh);}
+.block-panel h3{font-family:'Fraunces',serif;font-size:14px;color:var(--v800);margin-bottom:10px;font-weight:700;}
+.block-inp-row{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:8px;align-items:flex-end;}
+.block-inp-row input[type=date]{
+  padding:9px 11px;border-radius:8px;border:1.5px solid var(--border);
+  font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);
+  background:var(--srf2);outline:none;transition:border .12s;min-width:0;flex:1;
+}
+.block-inp-row input[type=date]:focus{border-color:var(--v600);}
+.btn-block{
+  padding:9px 14px;border-radius:8px;
+  background:linear-gradient(135deg,var(--v700),var(--r700));
+  color:#fff;border:none;font-size:13px;font-weight:600;cursor:pointer;
+  font-family:'DM Sans',sans-serif;white-space:nowrap;
+}
+.blocked-item{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  background:var(--ebg);border:1.5px solid #F0B0B0;
+  border-radius:8px;padding:8px 11px;margin-bottom:6px;font-size:13px;color:var(--err);font-weight:500;
+}
+.blocked-item button{background:none;border:none;cursor:pointer;color:var(--err);font-size:16px;opacity:.7;flex-shrink:0;}
+.blocked-item button:hover{opacity:1;}
+
+/* ═══ CHAT ═══════════════════════════════════════════════ */
+.chat-wrap{background:var(--srf);border-radius:var(--rad);border:1.5px solid var(--border);overflow:hidden;box-shadow:var(--sh);margin-bottom:12px;}
+.chat-hdr{background:linear-gradient(135deg,var(--v700),var(--r700));padding:12px 15px;display:flex;align-items:center;gap:9px;}
+.chat-av{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.chat-hdr-info{flex:1;}
+.chat-hdr-info h3{font-family:'Fraunces',serif;font-size:14px;color:#fff;font-weight:700;}
+.chat-hdr-info p{font-size:11px;color:rgba(255,255,255,.68);}
+.chat-dot{width:8px;height:8px;border-radius:50%;background:#5CFF8A;flex-shrink:0;}
+.chat-msgs{height:260px;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;background:var(--bg);}
+.chat-msgs::-webkit-scrollbar{width:4px;}
+.chat-msgs::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+.msg{max-width:80%;}
+.msg.from-a{align-self:flex-start;}
+.msg.from-c{align-self:flex-end;}
+.msg-bub{padding:9px 12px;border-radius:14px;font-size:13px;line-height:1.5;}
+.msg.from-a .msg-bub{background:var(--srf);border:1.5px solid var(--border);color:var(--text);border-bottom-left-radius:3px;}
+.msg.from-c .msg-bub{background:linear-gradient(135deg,var(--v700),var(--r700));color:#fff;border-bottom-right-radius:3px;}
+.msg-meta{font-size:10px;color:var(--muted);margin-top:2px;padding:0 3px;}
+.msg.from-c .msg-meta{text-align:right;}
+.chat-inp-row{display:flex;align-items:center;gap:7px;padding:9px 11px;border-top:1.5px solid var(--border);}
+.chat-inp{
+  flex:1;padding:9px 12px;border-radius:999px;
+  border:1.5px solid var(--border);font-family:'DM Sans',sans-serif;
+  font-size:13px;color:var(--text);background:var(--srf2);outline:none;
+  transition:border .12s;min-width:0;
+}
+.chat-inp:focus{border-color:var(--v600);}
+.chat-send{
+  width:36px;height:36px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--v700),var(--r700));
+  border:none;cursor:pointer;color:#fff;font-size:14px;
+  display:flex;align-items:center;justify-content:center;
+}
+.chat-empty{text-align:center;padding:28px 12px;color:var(--muted);font-size:13px;}
+
+/* ═══ CONTACT ════════════════════════════════════════════ */
+.contact-hero{
+  background:linear-gradient(150deg,var(--v900),var(--v700),var(--r700));
+  border-radius:var(--rad);padding:26px 18px;text-align:center;margin-bottom:14px;position:relative;overflow:hidden;
+}
+.contact-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 70% 0%,rgba(224,104,152,.35),transparent 60%);pointer-events:none;}
+.contact-hero h2{font-family:'Fraunces',serif;font-size:22px;color:#fff;font-weight:900;position:relative;}
+.contact-hero p{font-size:13px;color:rgba(255,255,255,.68);margin-top:4px;line-height:1.6;position:relative;}
+.cav{font-size:48px;margin-bottom:5px;position:relative;}
+.c-row{
+  background:var(--srf);border-radius:var(--rads);padding:13px 15px;border:1.5px solid var(--border);
+  margin-bottom:9px;display:flex;align-items:center;gap:12px;box-shadow:var(--sh);
+}
+.c-row .ci{font-size:20px;flex-shrink:0;}
+.c-lbl{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;}
+.c-val{font-size:14px;font-weight:600;color:var(--v800);margin-top:1px;}
+.c-val a{color:var(--r700);text-decoration:none;}
+
+/* ═══ MODALS ══════════════════════════════════════════════ */
+.modal-bg{
+  display:none;position:fixed;inset:0;
+  background:rgba(29,18,60,.6);z-index:300;
+  align-items:flex-end;justify-content:center;
+  padding:0;backdrop-filter:blur(4px);
+}
+@media(min-width:480px){.modal-bg{align-items:center;padding:16px;}}
+.modal-bg.show{display:flex;}
+.modal-box{
+  background:var(--srf);
+  border-radius:22px 22px 0 0;
+  padding:28px 20px 32px;
+  width:100%;max-width:420px;
+  border:1.5px solid var(--border);
+  animation:slideUp .3s ease;
+  box-shadow:var(--sh-lg);
+  text-align:center;
+}
+@media(min-width:480px){.modal-box{border-radius:22px;animation:pop .3s ease;}}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:none}}
+.modal-em{font-size:48px;margin-bottom:4px;}
+.modal-title{font-family:'Fraunces',serif;font-size:20px;color:var(--v800);margin:7px 0 6px;font-weight:900;}
+.modal-txt{font-size:13px;color:var(--muted);line-height:1.6;}
+.modal-code-box{background:var(--v900);border-radius:var(--rads);padding:12px;margin-top:12px;}
+.code-lbl{font-size:10px;color:rgba(255,255,255,.5);margin-bottom:3px;font-weight:500;}
+.code-val{font-family:'DM Sans',sans-serif;font-size:20px;color:#fff;font-weight:700;letter-spacing:3px;}
+.code-sub{font-size:10px;color:rgba(255,255,255,.35);margin-top:2px;}
+.modal-ok{
+  margin-top:15px;padding:12px 32px;
+  background:linear-gradient(135deg,var(--v700),var(--r700));
+  color:#fff;border:none;border-radius:999px;
+  font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;
+  cursor:pointer;box-shadow:0 4px 14px rgba(107,76,196,.3);
+}
+.modal-ok:hover{transform:translateY(-1px);}
+.modal-inp{
+  width:100%;padding:10px 13px;border-radius:var(--rads);
+  border:1.5px solid var(--border);font-family:'DM Sans',sans-serif;
+  font-size:14px;margin-bottom:9px;outline:none;transition:border .12s;
+}
+.modal-inp:focus{border-color:var(--v600);box-shadow:0 0 0 3px rgba(107,76,196,.1);}
+.modal-err{color:var(--err);font-size:13px;font-weight:600;margin-bottom:7px;display:none;}
+.modal-acts{display:flex;gap:8px;justify-content:center;margin-top:13px;flex-wrap:wrap;}
+.modal-sec{padding:10px 22px;background:var(--srf2);color:var(--muted);border:1.5px solid var(--border);border-radius:999px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;}
+
+/* ═══ EMPTY & MISC ═══════════════════════════════════════ */
+.empty{text-align:center;padding:36px 12px;}
+.empty .big{font-size:48px;margin-bottom:9px;}
+.empty p{font-size:14px;color:var(--muted);line-height:1.6;}
+footer{text-align:center;padding:14px;font-size:11px;color:var(--muted);letter-spacing:.3px;}
+footer strong{color:var(--v700);}
+
+/* ═══ RESPONSIVE ═════════════════════════════════════════ */
+@media(max-width:360px){
+  .tarifs-grid{grid-template-columns:1fr;}
+  .tc.hl{grid-column:auto;}
+  .vo-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <button class="hdr-login" onclick="openLoginModal()">🔐 Connexion</button>
+  <div class="hdr-inner">
+    <div class="hdr-brand">
+      <span>🐾</span>
+      <h1>Chaïma Pet Sitting</h1>
+    </div>
+    <p class="hdr-sub">Garde &amp; promenade · Marseille 7ème · 7j/7</p>
+    <div class="hdr-pill" id="hdr-pill">…</div>
+  </div>
+</header>
+
+<nav>
+  <button class="active" onclick="showTab('book')"><span class="ni">📅</span>Réserver</button>
+  <button onclick="showTab('tarifs')"><span class="ni">💰</span>Tarifs</button>
+  <button onclick="showTab('resas')"><span class="ni">📋</span>Mes réservations</button>
+  <button onclick="showTab('discussion')"><span class="ni">💬</span>Discussion</button>
+  <button onclick="showTab('contact')"><span class="ni">📞</span>Contact</button>
+</nav>
+
+<main>
+
+<!-- ══ RÉSERVER ══════════════════════════════════════════ -->
+<div id="tab-book" class="tab active">
+  <div class="banner b-info">🤝 <strong>Rencontre préalable obligatoire</strong> — Avant toute garde, une première rencontre sera organisée entre moi, vous et votre animal.</div>
+  <div class="dog-note">🐕 <strong>Garde individuelle uniquement</strong> — Je ne garde qu'un seul chien à la fois.</div>
+  <div id="book-promo" class="banner b-promo" style="display:none"></div>
+
+  <div class="sec"><span class="sec-num">1</span> Choisissez vos dates</div>
+  <div class="card">
+    <div class="date-boxes">
+      <div class="dbox" id="dbox-s" onclick="activatePicker('start')">
+        <div class="dbox-lbl">Arrivée</div>
+        <div class="dbox-val ph" id="dval-s">Choisir</div>
+      </div>
+      <div class="dbox" id="dbox-e" onclick="activatePicker('end')">
+        <div class="dbox-lbl">Départ</div>
+        <div class="dbox-val ph" id="dval-e">Choisir</div>
+      </div>
+    </div>
+    <div class="cal-nav">
+      <button class="cal-arr" onclick="prevM()">‹</button>
+      <span class="cal-month" id="cal-month"></span>
+      <button class="cal-arr" onclick="nextM()">›</button>
+    </div>
+    <div class="cal-grid" id="cal-grid"></div>
+    <div class="cal-legend">
+      <div class="leg-i"><div class="leg-dot" style="background:var(--v800)"></div>Début</div>
+      <div class="leg-i"><div class="leg-dot" style="background:var(--r700)"></div>Fin</div>
+      <div class="leg-i"><div class="leg-bar" style="background:#EDE5FF"></div>Période</div>
+      <div class="leg-i"><div class="leg-dot" style="background:#FFE8E8;border:1.5px solid #F0B0B0"></div>Indispo</div>
+    </div>
+  </div>
+
+  <div id="visit-opts-section" style="display:none">
+    <div class="sec"><span class="sec-num">2</span> Visites par jour</div>
+    <div class="card">
+      <div class="vo-grid" id="vo-grid">
+        <div class="vo" id="vo-1" onclick="selectFreq(1)">
+          <div class="vo-emoji">🐾</div>
+          <div class="vo-title">1 visite</div>
+          <div class="vo-sub">par jour</div>
+        </div>
+        <div class="vo" id="vo-2" onclick="selectFreq(2)">
+          <div class="vo-emoji">🐾🐾</div>
+          <div class="vo-title">2 visites</div>
+          <div class="vo-sub">par jour (max)</div>
+        </div>
+      </div>
+      <div id="week-limit-note" style="display:none;margin-top:8px;font-size:12px;color:var(--warn);font-weight:600;">⚠️ Forfait semaine : max 2 visites/jour · 2h max au total par jour.</div>
+    </div>
+
+    <div id="visits-detail-section" style="display:none">
+      <div class="sec"><span class="sec-num">3</span> Durée &amp; créneau</div>
+
+      <div id="week-offer-wrap" style="display:none">
+        <div class="week-card" id="week-card" onclick="toggleWeek()">
+          <div class="wc-top">
+            <div class="wc-title">🌟 Forfait semaine — 70€</div>
+            <span class="wc-check" id="wc-check">☆</span>
+          </div>
+          <div class="wc-desc" id="wc-desc">Valable jusqu'au 1er sept. 2026 · Max 2 visites/jour · 2h max/jour · Tapez pour sélectionner</div>
+        </div>
+      </div>
+
+      <div class="card" id="visit-rows" style="padding:12px;"></div>
+
+      <div class="price-card">
+        <div class="pc-title">Récapitulatif du prix</div>
+        <div id="price-details"><div class="pc-ph">Sélectionnez la durée de chaque visite 👆</div></div>
+      </div>
+
+      <div class="sec"><span class="sec-num">4</span> Vos informations</div>
+      <div class="card">
+        <div class="form-row">
+          <label class="form-lbl">Prénom <span class="req">*</span></label>
+          <input class="finp" id="inp-name" type="text" placeholder="Ex : Sophie">
+        </div>
+        <div class="form-row">
+          <label class="form-lbl">Téléphone <span class="req">*</span></label>
+          <input class="finp" id="inp-phone" type="tel" placeholder="06 XX XX XX XX">
+        </div>
+        <div class="form-row">
+          <label class="form-lbl">Email</label>
+          <input class="finp" id="inp-email" type="email" placeholder="vous@email.com">
+        </div>
+        <div class="form-row">
+          <label class="form-lbl">Type d'animal <span class="req">*</span></label>
+          <div class="chip-row" id="animal-chips">
+            <button class="chip sel" onclick="pickAnimal(this,'Chien')">🐕 Chien</button>
+            <button class="chip" onclick="pickAnimal(this,'Chat')">🐱 Chat</button>
+          </div>
+        </div>
+        <div class="form-row">
+          <label class="form-lbl">Race <span class="req">*</span></label>
+          <input class="finp" id="inp-race" type="text" placeholder="Ex : Berger Allemand, Caniche…">
+        </div>
+        <div class="form-row">
+          <label class="form-lbl">Prénom de l'animal <span class="req">*</span></label>
+          <input class="finp" id="inp-pet" type="text" placeholder="Ex : Rex">
+        </div>
+        <div class="form-row" id="row-cats" style="display:none">
+          <label class="form-lbl">Nombre de chats</label>
+          <select class="fsel" id="inp-cats" onchange="updateCatSup()">
+            <option value="1">1 chat</option>
+            <option value="2">2 chats (+5€)</option>
+            <option value="3">3 chats (+10€)</option>
+            <option value="4">4 chats (+15€)</option>
+          </select>
+          <div id="cat-note" style="display:none;margin-top:5px;font-size:12px;color:#8B5200;font-weight:600;"></div>
+        </div>
+        <div class="form-row">
+          <label class="form-lbl">Infos sur l'animal</label>
+          <textarea class="ftxt" id="inp-msg" placeholder="Comportement, habitudes, allergies…"></textarea>
+        </div>
+        <div class="pay-note">💵 Paiement en espèces après chaque balade / visite.</div>
+      </div>
+      <button class="btn-confirm" onclick="confirmBooking()">Envoyer la demande →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TARIFS ════════════════════════════════════════════ -->
+<div id="tab-tarifs" class="tab">
+  <div class="tarifs-title">Nos tarifs</div>
+  <div class="tarifs-sub">Transparence totale — pas de surprises</div>
+  <div id="tarifs-promo" class="banner b-promo" style="display:none"></div>
+  <div class="tarifs-grid" id="tarifs-grid"></div>
+  <div class="tarif-extra">
+    <strong>🐱 Supplément chats :</strong> +5€ par chat supplémentaire (ex : 2 chats = +5€).<br>
+    <span style="font-size:12px;color:var(--muted);">Les chats sont gardés ensemble, contrairement aux chiens (garde individuelle uniquement).</span>
+  </div>
+  <div class="banner b-info">💡 <strong>Exemple d'économie :</strong> 2 visites de 1h × 7 jours = 140€ au tarif normal → forfait semaine = <strong>70€ soit −50% !</strong></div>
+  <div class="pay-note" style="margin-top:12px;">💵 Paiement en espèces après chaque balade / visite.</div>
+</div>
+
+<!-- ══ RÉSERVATIONS ══════════════════════════════════════ -->
+<div id="tab-resas" class="tab">
+  <!-- Client view -->
+  <div id="resa-client">
+    <div id="resa-login-section">
+      <div class="login-card">
+        <h2>🔑 Mes réservations</h2>
+        <p>Entrez votre prénom et votre code de réservation.</p>
+        <input class="finp" id="cl-name" type="text" placeholder="Votre prénom" style="margin-bottom:8px;">
+        <input class="finp" id="cl-code" type="text" placeholder="Code (ex: CP-4829)" style="margin-bottom:8px;">
+        <div id="cl-err" style="color:var(--err);font-size:13px;font-weight:600;display:none;margin-bottom:7px;"></div>
+        <button class="btn-confirm" style="font-size:14px;padding:12px;" onclick="clientLogin()">Voir mes réservations</button>
+      </div>
+    </div>
+    <div id="resa-client-logged" style="display:none">
+      <div class="ubar"><span id="cl-welcome"></span><button onclick="clientLogout()">Déconnexion</button></div>
+      <div id="resa-list"></div>
+    </div>
+  </div>
+  <!-- Admin view -->
+  <div id="resa-admin" style="display:none">
+    <div class="ubar admin-bar"><span>👑 Admin — Chaïma</span><button onclick="adminLogout()">Déconnexion</button></div>
+    <div class="admin-tabs">
+      <button class="atab active" onclick="switchATab('resas',this)">📋 Réservations</button>
+      <button class="atab" onclick="switchATab('blocks',this)">🚫 Bloquer des dates</button>
+    </div>
+    <div id="ap-resas">
+      <div class="filter-bar">
+        <button class="filt active" onclick="setFilter('all',this)">Toutes</button>
+        <button class="filt" onclick="setFilter('pending',this)">⏳ Attente</button>
+        <button class="filt" onclick="setFilter('accepted',this)">✅ Acceptées</button>
+        <button class="filt" onclick="setFilter('refused',this)">❌ Refusées</button>
+      </div>
+      <div id="admin-resa-list"></div>
+    </div>
+    <div id="ap-blocks" style="display:none">
+      <div class="block-panel">
+        <h3>🚫 Bloquer un jour</h3>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:10px;">Ce jour apparaîtra en rouge dans le calendrier.</p>
+        <div class="block-inp-row">
+          <input type="date" id="block-day-inp">
+          <button class="btn-block" onclick="addBlockDay()">Bloquer</button>
+        </div>
+        <div id="blocked-days-list"></div>
+      </div>
+      <div class="block-panel">
+        <h3>🗓️ Bloquer une période</h3>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:10px;">Bloquez une plage de dates d'un coup.</p>
+        <div style="margin-bottom:8px;">
+          <div style="display:flex;gap:7px;align-items:center;margin-bottom:7px;">
+            <label style="font-size:12px;font-weight:600;color:var(--muted);width:30px;">Du</label>
+            <input type="date" id="br-start" style="flex:1;padding:9px 11px;border-radius:8px;border:1.5px solid var(--border);font-family:'DM Sans',sans-serif;font-size:13px;background:var(--srf2);outline:none;">
+          </div>
+          <div style="display:flex;gap:7px;align-items:center;margin-bottom:7px;">
+            <label style="font-size:12px;font-weight:600;color:var(--muted);width:30px;">Au</label>
+            <input type="date" id="br-end" style="flex:1;padding:9px 11px;border-radius:8px;border:1.5px solid var(--border);font-family:'DM Sans',sans-serif;font-size:13px;background:var(--srf2);outline:none;">
+          </div>
+          <input class="finp" id="br-label" placeholder="Motif (ex : Vacances 🌴)" style="margin-bottom:8px;">
+          <button class="btn-block" onclick="addBlockRange()">Bloquer cette période</button>
+        </div>
+        <div id="blocked-ranges-list"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ DISCUSSION ════════════════════════════════════════ -->
+<div id="tab-discussion" class="tab">
+  <div id="disc-prompt" class="banner b-info" style="display:none">
+    💬 Connectez-vous avec votre code de réservation pour discuter avec Chaïma.
+    <br><button onclick="showTab('resas')" style="margin-top:8px;background:var(--v700);color:#fff;border:none;padding:6px 13px;border-radius:999px;font-size:12px;font-weight:600;cursor:pointer;">Se connecter →</button>
+  </div>
+  <div id="disc-client" style="display:none">
+    <div class="chat-wrap">
+      <div class="chat-hdr">
+        <div class="chat-av">🧕🏾</div>
+        <div class="chat-hdr-info">
+          <h3>Chaïma</h3>
+          <p>Pet Sitting · Marseille 7ème</p>
+        </div>
+        <div class="chat-dot"></div>
+      </div>
+      <div class="chat-msgs" id="chat-msgs"></div>
+      <div class="chat-inp-row">
+        <input class="chat-inp" id="chat-inp" type="text" placeholder="Votre message…" onkeydown="if(event.key==='Enter')sendMsg()">
+        <button class="chat-send" onclick="sendMsg()">➤</button>
+      </div>
+    </div>
+    <p style="font-size:11px;color:var(--muted);text-align:center;">Messages visibles par Chaïma dans son espace admin.</p>
+  </div>
+  <div id="disc-admin" style="display:none">
+    <div class="ubar admin-bar"><span>👑 Discussion Admin</span></div>
+    <div id="admin-chat-list"></div>
+  </div>
+</div>
+
+<!-- ══ CONTACT ═══════════════════════════════════════════ -->
+<div id="tab-contact" class="tab">
+  <div class="contact-hero">
+    <div class="cav">🧕🏾</div>
+    <h2>Chaïma</h2>
+    <p>Passionnée d'animaux · Marseille 7ème · 7j/7<br><span style="font-size:11px;color:rgba(255,255,255,.5);">Garde individuelle — Un seul chien à la fois</span></p>
+  </div>
+  <div class="c-row"><div class="ci">📞</div><div><div class="c-lbl">Téléphone</div><div class="c-val"><a href="tel:0764094195">07.64.09.41.95</a></div></div></div>
+  <div class="c-row"><div class="ci">✉️</div><div><div class="c-lbl">Email</div><div class="c-val"><a href="mailto:chaimaslm27@gmail.com">chaimaslm27@gmail.com</a></div></div></div>
+  <div class="c-row"><div class="ci">📍</div><div><div class="c-lbl">Zone de garde</div><div class="c-val">Marseille 7ème arrondissement</div></div></div>
+  <div class="c-row"><div class="ci">🕐</div><div><div class="c-lbl">Disponibilité</div><div class="c-val">7 jours sur 7</div></div></div>
+  <div class="c-row"><div class="ci">🐾</div><div><div class="c-lbl">Politique</div><div class="c-val">Un seul chien à la fois · Chats acceptés ensemble</div></div></div>
+</div>
+
+</main>
+
+<!-- MODAL CONFIRMATION -->
+<div class="modal-bg" id="modal">
+  <div class="modal-box">
+    <div class="modal-em">🎉</div>
+    <div class="modal-title">Demande envoyée !</div>
+    <div class="modal-txt" id="modal-txt"></div>
+    <div class="modal-code-box">
+      <div class="code-lbl">🔑 Votre code de réservation</div>
+      <div class="code-val" id="modal-code"></div>
+      <div class="code-sub">Conservez ce code pour consulter votre réservation</div>
+    </div>
+    <button class="modal-ok" onclick="closeModal()">Parfait, merci !</button>
+  </div>
+</div>
+
+<!-- MODAL LOGIN ADMIN -->
+<div class="modal-bg" id="login-modal">
+  <div class="modal-box">
+    <div class="modal-em">🔐</div>
+    <div class="modal-title">Espace Chaïma</div>
+    <div class="modal-txt" style="margin-bottom:13px;">Réservé à Chaïma — accès admin</div>
+    <input class="modal-inp" id="admin-pw" type="password" placeholder="Mot de passe" onkeydown="if(event.key==='Enter')tryAdminLogin()">
+    <div class="modal-err" id="admin-err">Mot de passe incorrect ❌</div>
+    <div class="modal-acts">
+      <button class="modal-sec" onclick="closeLoginModal()">Annuler</button>
+      <button class="modal-ok" style="margin-top:0" onclick="tryAdminLogin()">Connexion</button>
+    </div>
+  </div>
+</div>
+
+<footer>🐾 <strong>Chaïma Pet Sitting</strong> · Marseille 7ème · 07.64.09.41.95</footer>
+
+<script>
+// ══════ CONFIG ══════════════════════════════════════════
+const ADMIN_PW = 'chaima2025';
+const MONTHS = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+const MONTHS_S = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
+const DAYS = ['Lu','Ma','Me','Je','Ve','Sa','Di'];
+
+const PROMO_UNIT_END = new Date(2026, 6, 31, 23, 59, 59);
+const PROMO_WEEK_END = new Date(2026, 8, 1,  23, 59, 59);
+
+const TARIFS = [
+  { id:'30min', label:'30 min',   emoji:'⚡', base:10, promo:5,  min:30  },
+  { id:'1h',    label:'1 heure',  emoji:'🐾', base:15, promo:10, min:60  },
+  { id:'2h',    label:'2 heures', emoji:'🌟', base:30, promo:20, min:120 },
+];
+
+// ══════ STATE ════════════════════════════════════════════
+const now0 = () => { const d = new Date(); d.setHours(0,0,0,0); return d; };
+const promoUnit = () => now0() <= PROMO_UNIT_END;
+const promoWeek = () => now0() <= PROMO_WEEK_END;
+const getPrice = t => promoUnit() ? t.promo : t.base;
+
+let calY = new Date().getFullYear(), calM = new Date().getMonth();
+let startD = null, endD = null, pickMode = 'start';
+let freq = 0, durs = [null,null], times = ['',''], weekSel = false;
+let animal = 'Chien';
+let resas = JSON.parse(localStorage.getItem('c_resas') || '[]');
+let afilt = 'all';
+let client = null, adminIn = false;
+let bDays = JSON.parse(localStorage.getItem('c_bdays') || '[]');
+let bRanges = JSON.parse(localStorage.getItem('c_branges') || '[]');
+let msgs = JSON.parse(localStorage.getItem('c_msgs') || '[]');
+
+// ══════ INIT ═════════════════════════════════════════════
+function boot(){
+  const pu = promoUnit(), pw = promoWeek();
+  const pill = document.getElementById('hdr-pill');
+  if(pu) pill.textContent = '🎉 Promo : 30min 5€ · 1h 10€ · 2h 20€' + (pw?' · Semaine 70€':'');
+  else if(pw) pill.textContent = '🌟 Forfait semaine 70€ jusqu\'au 1er sept.';
+  else pill.textContent = '30min 10€ · 1h 15€ · 2h 30€';
+
+  const bp = document.getElementById('book-promo');
+  if(pu){ bp.innerHTML = `🎉 <strong>Promo jusqu'au 31 juil 2026 :</strong> 30min → 5€ · 1h → 10€ · 2h → 20€`+(pw?`<br>🌟 <strong>Forfait semaine 70€</strong> jusqu'au 1er sept. 2026`:''); bp.style.display='block'; }
+  else if(pw){ bp.innerHTML = `🌟 <strong>Forfait semaine 70€</strong> valable jusqu'au 1er sept. 2026`; bp.style.display='block'; }
+
+  const tp = document.getElementById('tarifs-promo');
+  if(pu){ tp.innerHTML = `🎉 <strong>Promotion en cours jusqu'au 31 juil 2026</strong> — les anciens tarifs sont barrés.`; tp.style.display='block'; }
+
+  buildTarifsGrid();
+  buildCalendar();
+}
+
+function buildTarifsGrid(){
+  const g = document.getElementById('tarifs-grid');
+  g.innerHTML = '';
+  const pu = promoUnit(), pw = promoWeek();
+  TARIFS.forEach(t => {
+    const p = getPrice(t);
+    const el = document.createElement('div');
+    el.className = 'tc';
+    el.innerHTML = `
+      ${pu?'<div class="ribbon">PROMO</div>':''}
+      <div class="t-em">${t.emoji}</div>
+      <div class="t-lbl2">${t.label}</div>
+      <div class="t-pnew">${p}€</div>
+      ${pu?`<div class="t-pold">${t.base}€</div><div class="t-pbadge">−${t.base-p}€ jusqu'au 31/07</div>`:''}
+      <div class="t-div"></div>
+      <div class="t-note2">${t.id==='30min'?'Visite courte':t.id==='1h'?'Balade classique':'Grande balade'}</div>`;
+    g.appendChild(el);
+  });
+  if(pw){
+    const el = document.createElement('div');
+    el.className = 'tc hl';
+    el.innerHTML = `<div class="t-em">🌟</div><div class="t-lbl2">Forfait Semaine</div><div class="t-pnew">70€</div><div class="t-pbadge">Valable jusqu'au 1er sept. 2026</div><div class="t-div"></div><div class="t-note2">Max 2 visites/jour · 2h max/jour · 7 jours · Peu importe la durée</div>`;
+    g.appendChild(el);
+  }
+}
+
+// ══════ BLOCKED HELPERS ══════════════════════════════════
+function isBlocked(dt){
+  const key = dtKey(dt);
+  if(bDays.includes(key)) return true;
+  for(const r of bRanges){
+    const s = new Date(r.start+'T00:00:00'), e = new Date(r.end+'T00:00:00');
+    if(dt>=s && dt<=e) return true;
+  }
+  return false;
+}
+function dtKey(dt){ return `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}-${String(dt.getDate()).padStart(2,'0')}`; }
+function saveBD(){ localStorage.setItem('c_bdays',JSON.stringify(bDays)); }
+function saveBR(){ localStorage.setItem('c_branges',JSON.stringify(bRanges)); }
+
+function addBlockDay(){
+  const v = document.getElementById('block-day-inp').value;
+  if(!v) return alert('Choisissez une date !');
+  if(!bDays.includes(v)) bDays.push(v);
+  saveBD(); document.getElementById('block-day-inp').value='';
+  renderBlockLists(); buildCalendar();
+}
+function rmBlockDay(d){ bDays = bDays.filter(x=>x!==d); saveBD(); renderBlockLists(); buildCalendar(); }
+function addBlockRange(){
+  const s = document.getElementById('br-start').value;
+  const e = document.getElementById('br-end').value;
+  const lbl = document.getElementById('br-label').value || 'Indisponible';
+  if(!s||!e) return alert('Choisissez les deux dates !');
+  if(s>e) return alert('La date de fin doit être après la date de début !');
+  bRanges.push({start:s,end:e,label:lbl});
+  saveBR();
+  ['br-start','br-end','br-label'].forEach(id=>document.getElementById(id).value='');
+  renderBlockLists(); buildCalendar();
+}
+function rmBlockRange(i){ bRanges.splice(i,1); saveBR(); renderBlockLists(); buildCalendar(); }
+
+function renderBlockLists(){
+  const dl = document.getElementById('blocked-days-list');
+  const rl = document.getElementById('blocked-ranges-list');
+  if(!dl||!rl) return;
+  dl.innerHTML = bDays.length ? bDays.sort().map(d=>`<div class="blocked-item"><span>🚫 ${fmtKey(d)}</span><button onclick="rmBlockDay('${d}')">✕</button></div>`).join('') : '<p style="font-size:12px;color:var(--muted);text-align:center;padding:6px;">Aucun jour bloqué</p>';
+  rl.innerHTML = bRanges.length ? bRanges.map((r,i)=>`<div class="blocked-item"><span>🗓️ ${fmtKey(r.start)} → ${fmtKey(r.end)} · ${r.label}</span><button onclick="rmBlockRange(${i})">✕</button></div>`).join('') : '<p style="font-size:12px;color:var(--muted);text-align:center;padding:6px;">Aucune période bloquée</p>';
+}
+function fmtKey(k){ const[y,m,d]=k.split('-'); return `${parseInt(d)} ${MONTHS_S[parseInt(m)-1]} ${y}`; }
+
+function switchATab(tab,btn){
+  document.querySelectorAll('.atab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('ap-resas').style.display = tab==='resas'?'block':'none';
+  document.getElementById('ap-blocks').style.display = tab==='blocks'?'block':'none';
+  if(tab==='blocks') renderBlockLists();
+}
+
+// ══════ CALENDAR ═════════════════════════════════════════
+function activatePicker(m){
+  pickMode = m;
+  document.getElementById('dbox-s').classList.toggle('active',m==='start');
+  document.getElementById('dbox-e').classList.toggle('active',m==='end');
+}
+
+function buildCalendar(){
+  const today = now0();
+  const grid = document.getElementById('cal-grid');
+  grid.innerHTML = '';
+  DAYS.forEach(d=>{ const el=document.createElement('div'); el.className='cal-lbl'; el.textContent=d; grid.appendChild(el); });
+  const firstDow = new Date(calY,calM,1).getDay();
+  const offset = firstDow===0?6:firstDow-1;
+  for(let i=0;i<offset;i++){ const el=document.createElement('div'); el.className='cal-day empty'; grid.appendChild(el); }
+  const total = new Date(calY,calM+1,0).getDate();
+  for(let d=1;d<=total;d++){
+    const dt = new Date(calY,calM,d);
+    const past = dt < today;
+    const isToday = dt.getTime()===today.getTime();
+    const blk = isBlocked(dt);
+    const el = document.createElement('div');
+    let cls = 'cal-day';
+    if(blk) cls += ' blocked';
+    else if(past) cls += ' disabled';
+    else cls += ' avail';
+    if(isToday) cls += ' today';
+    const ks = dtKey2(dt);
+    if(startD && ks===dtKey2(startD)) cls += ' start-d in-r';
+    else if(endD && ks===dtKey2(endD)) cls += ' end-d in-r';
+    else if(startD&&endD&&dt>startD&&dt<endD) cls += ' in-r';
+    el.className = cls; el.textContent = d;
+    if(!past&&!blk) el.onclick = ()=>pickDay(d);
+    grid.appendChild(el);
+  }
+  document.getElementById('cal-month').textContent = `${MONTHS[calM]} ${calY}`;
+}
+function dtKey2(dt){ return `${dt.getFullYear()}-${dt.getMonth()}-${dt.getDate()}`; }
+function prevM(){ if(calM===0){calM=11;calY--;}else calM--; buildCalendar(); }
+function nextM(){ if(calM===11){calM=0;calY++;}else calM++; buildCalendar(); }
+
+function pickDay(d){
+  const dt = new Date(calY,calM,d);
+  if(pickMode==='start'){
+    startD=dt; endD=null; updateDateBoxes(); activatePicker('end');
+  } else {
+    if(startD&&dt<startD){endD=startD;startD=dt;}else endD=dt;
+    updateDateBoxes();
+    document.getElementById('dbox-s').classList.remove('active');
+    document.getElementById('dbox-e').classList.remove('active');
+    pickMode='start';
+  }
+  buildCalendar();
+  if(startD&&endD){
+    const check = new Date(startD);
+    while(check<=endD){
+      if(isBlocked(check)){ alert('⚠️ Votre sélection contient des jours indisponibles. Choisissez une autre période.'); startD=null;endD=null;updateDateBoxes();buildCalendar();return; }
+      check.setDate(check.getDate()+1);
+    }
+    resetVisit();
+    document.getElementById('visit-opts-section').style.display='block';
+    setTimeout(()=>document.getElementById('visit-opts-section').scrollIntoView({behavior:'smooth',block:'start'}),80);
+    checkWeekOffer();
+  }
+}
+
+function getDays(){ return (!startD||!endD)?0:Math.round((endD-startD)/86400000)+1; }
+function fmtDate(dt){ return dt?`${dt.getDate()} ${MONTHS[dt.getMonth()]} ${dt.getFullYear()}`:''; }
+function updateDateBoxes(){
+  const sv=document.getElementById('dval-s'), ev=document.getElementById('dval-e');
+  if(startD){sv.textContent=fmtDate(startD);sv.className='dbox-val';}else{sv.textContent='Choisir';sv.className='dbox-val ph';}
+  if(endD){ev.textContent=fmtDate(endD);ev.className='dbox-val';}else{ev.textContent='Choisir';ev.className='dbox-val ph';}
+}
+
+// ══════ BLOCKED RANGE HELPERS ════════════════════════════
+function getBlockedSlots(dateStr){
+  const slots = [];
+  resas.forEach(r=>{
+    if(!r.visits) return;
+    const rs = parseStored(r.startDate), re = parseStored(r.endDate);
+    if(!rs||!re) return;
+    const tgt = new Date(dateStr);
+    if(tgt<rs||tgt>re) return;
+    r.visits.forEach(v=>{
+      if(!v.time) return;
+      const[h,m]=v.time.split(':').map(Number);
+      const sm=h*60+m, dm=durMin(v.durId||v.dur);
+      slots.push({start:sm,end:sm+dm+15,label:v.time});
+    });
+  });
+  return slots;
+}
+function durMin(id){
+  if(!id) return 30;
+  if(String(id).includes('30')) return 30;
+  if(String(id).includes('2h')||String(id).includes('2 h')) return 120;
+  if(String(id).includes('1h')||String(id).includes('1 h')) return 60;
+  return 30;
+}
+function parseStored(s){
+  if(!s) return null;
+  const p=s.split(' ');
+  if(p.length<3) return null;
+  const d=parseInt(p[0]),mo=MONTHS.findIndex(x=>x===p[1]),y=parseInt(p[2]);
+  if(mo===-1||isNaN(d)||isNaN(y)) return null;
+  const dt=new Date(y,mo,d);dt.setHours(0,0,0,0);return dt;
+}
+function hasConflict(tStr,dMin,exIdx){
+  if(!tStr||!startD||!endD) return false;
+  const[h,m]=tStr.split(':').map(Number);
+  const ts=h*60+m,te=ts+dMin;
+  for(let i=0;i<freq;i++){
+    if(i===exIdx||!times[i]||!durs[i]) continue;
+    const[hh,mm]=times[i].split(':').map(Number);
+    const os=hh*60+mm,om=TARIFS.find(t=>t.id===durs[i]).min,oe=os+om+15;
+    if(ts<oe&&te>os) return {r:`conflit visite ${i+1}`};
+  }
+  const d=new Date(startD);
+  while(d<=endD){
+    const ds=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    const bl=getBlockedSlots(ds);
+    for(const b of bl){ if(ts<b.end&&te>b.start) return {r:`déjà réservé à ${b.label}`}; }
+    d.setDate(d.getDate()+1);
+  }
+  return false;
+}
+
+// ══════ VISIT FREQ ═══════════════════════════════════════
+function resetVisit(){
+  freq=0;durs=[null,null];times=['',''];weekSel=false;
+  [1,2].forEach(i=>document.getElementById('vo-'+i).classList.remove('sel'));
+  document.getElementById('visits-detail-section').style.display='none';
+  document.getElementById('week-limit-note').style.display='none';
+}
+function selectFreq(n){
+  freq=n;durs=[null,null];times=['',''];
+  [1,2].forEach(i=>document.getElementById('vo-'+i).classList.toggle('sel',i===n));
+  document.getElementById('visits-detail-section').style.display='block';
+  buildVisitRows(); checkWeekOffer(); updatePrice();
+  setTimeout(()=>document.getElementById('visits-detail-section').scrollIntoView({behavior:'smooth',block:'start'}),80);
+}
+function buildVisitRows(){
+  const wrap = document.getElementById('visit-rows');
+  wrap.innerHTML = '';
+  for(let i=0;i<freq;i++){
+    const d = document.createElement('div');
+    d.className = 'vrow';
+    d.innerHTML = `
+      <div class="vrow-title">🐾 Visite ${i+1}</div>
+      <div class="dur-grid" id="dg-${i}"></div>
+      <div class="t-row">
+        <span class="t-lbl">Créneau :</span>
+        <input type="time" class="t-inp" id="tv-${i}" value="${times[i]}" onchange="onTC(${i},this.value)">
+      </div>
+      <div class="t-warn" id="tw-${i}"></div>
+      <div class="t-blk-info" id="tbi-${i}"></div>`;
+    wrap.appendChild(d);
+    buildDurGrid(i);
+  }
+}
+function buildDurGrid(idx){
+  const g = document.getElementById('dg-'+idx);
+  if(!g) return;
+  g.innerHTML = '';
+  let wRem = 120;
+  if(weekSel){
+    for(let j=0;j<freq;j++){
+      if(j===idx||!durs[j]) continue;
+      const t=TARIFS.find(x=>x.id===durs[j]);
+      if(t) wRem-=t.min;
+    }
+  }
+  TARIFS.forEach(t=>{
+    const p=getPrice(t),pu=promoUnit();
+    const blk=weekSel&&t.min>wRem;
+    const btn=document.createElement('div');
+    btn.className='dbtn'+(durs[idx]===t.id?' sel':'')+(blk?' blk':'');
+    btn.innerHTML=`<div class="db-label">${t.label}</div><div class="db-price">${p}€</div>${pu&&!blk?`<div class="db-old">${t.base}€</div><div class="db-badge">−${t.base-p}€</div>`:''}${blk?`<div class="db-blk-lbl">🚫 max 2h/j</div>`:''}`;
+    if(!blk) btn.onclick=()=>{ durs[idx]=t.id; buildDurGrid(idx); for(let j=0;j<freq;j++){if(j!==idx)buildDurGrid(j);} validateTime(idx); updatePrice(); };
+    g.appendChild(btn);
+  });
+}
+function onTC(idx,val){ times[idx]=val; validateTime(idx); }
+function validateTime(idx){
+  if(!times[idx]||!durs[idx]) return;
+  const t=TARIFS.find(x=>x.id===durs[idx]);
+  if(!t) return;
+  const c=hasConflict(times[idx],t.min,idx);
+  const w=document.getElementById('tw-'+idx);
+  const inp=document.getElementById('tv-'+idx);
+  if(c){ w.textContent='⚠️ Créneau indisponible : '+c.r+'. Choisissez un autre créneau.'; w.style.display='block'; inp&&inp.classList.add('conflict'); }
+  else { w.style.display='none'; inp&&inp.classList.remove('conflict'); }
+  showBlockInfo(idx);
+}
+function showBlockInfo(idx){
+  if(!startD||!endD) return;
+  const el=document.getElementById('tbi-'+idx);
+  if(!el) return;
+  const ds=`${startD.getFullYear()}-${String(startD.getMonth()+1).padStart(2,'0')}-${String(startD.getDate()).padStart(2,'0')}`;
+  const bl=getBlockedSlots(ds);
+  if(!bl.length){el.style.display='none';return;}
+  el.textContent='🚫 Créneaux pris : '+bl.map(b=>`${b.label}+15min`).join(', ');
+  el.style.display='block';
+}
+
+// ══════ WEEK OFFER ════════════════════════════════════════
+function checkWeekOffer(){
+  const show=promoWeek()&&getDays()===7&&freq>0&&freq<=2;
+  document.getElementById('week-offer-wrap').style.display=show?'block':'none';
+  document.getElementById('week-limit-note').style.display=weekSel?'block':'none';
+}
+function toggleWeek(){
+  weekSel=!weekSel;
+  document.getElementById('week-card').classList.toggle('sel',weekSel);
+  document.getElementById('wc-check').textContent=weekSel?'★':'☆';
+  for(let i=0;i<freq;i++) buildDurGrid(i);
+  checkWeekOffer(); updatePrice();
+}
+
+// ══════ PRICE ════════════════════════════════════════════
+function calcPrice(){
+  if(!startD||!endD||!freq) return null;
+  const days=getDays();
+  const nbC=animal==='Chat'?(parseInt(document.getElementById('inp-cats')?.value)||1):1;
+  const catX=animal==='Chat'?(nbC-1)*5:0;
+  if(weekSel) return {total:70+catX,rows:[{l:'Forfait semaine (7j)',v:'70€'},catX>0?{l:'Supplément chats',v:`+${catX}€`}:null].filter(Boolean),save:null};
+  if(!durs.slice(0,freq).every(d=>d!==null)) return null;
+  let sub=0;const rows=[];
+  for(let i=0;i<freq;i++){
+    const t=TARIFS.find(x=>x.id===durs[i]),p=getPrice(t),line=p*days;
+    sub+=line;rows.push({l:`Visite ${i+1} · ${t.label} × ${days}j`,v:`${line}€`});
+  }
+  if(catX>0) rows.push({l:'Supplément chats',v:`+${catX}€`});
+  const norm=durs.slice(0,freq).reduce((s,id)=>{const t=TARIFS.find(x=>x.id===id);return s+(t.base*days);},0);
+  const save=promoUnit()?norm-sub:0;
+  return {total:sub+catX,rows,save:save>0?save:null};
+}
+function updatePrice(){
+  const det=document.getElementById('price-details');
+  if(!det) return;
+  const r=calcPrice();
+  if(!r){det.innerHTML='<div class="pc-ph">Sélectionnez la durée de chaque visite 👆</div>';return;}
+  det.innerHTML=r.rows.map(x=>`<div class="pc-row"><span>${x.l}</span><span class="pc-val">${x.v}</span></div>`).join('')
+    +`<div class="pc-row total"><span>Total estimé</span><span class="pc-val">${r.total}€</span></div>`
+    +(r.save?`<div class="pc-saving">🎉 Économie promo : −${r.save}€ !</div>`:'');
+}
+
+// ══════ ANIMAL ════════════════════════════════════════════
+function pickAnimal(btn,a){
+  document.querySelectorAll('.chip').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel'); animal=a;
+  document.getElementById('row-cats').style.display=a==='Chat'?'block':'none';
+  updateCatSup(); updatePrice();
+}
+function updateCatSup(){
+  const nb=parseInt(document.getElementById('inp-cats').value)||1;
+  const s=(nb-1)*5;
+  const n=document.getElementById('cat-note');
+  if(nb>1){n.textContent=`⚠️ Supplément de ${s}€ pour chats supplémentaires.`;n.style.display='block';}else{n.style.display='none';}
+  updatePrice();
+}
+
+// ══════ RESERVATION ══════════════════════════════════════
+function genCode(){ const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let r='CP-'; for(let i=0;i<4;i++)r+=c[Math.floor(Math.random()*c.length)]; return r; }
+
+function confirmBooking(){
+  const name=document.getElementById('inp-name').value.trim();
+  const phone=document.getElementById('inp-phone').value.trim();
+  const email=document.getElementById('inp-email').value.trim();
+  const race=document.getElementById('inp-race').value.trim();
+  const pet=document.getElementById('inp-pet').value.trim();
+  const msg=document.getElementById('inp-msg').value.trim();
+  const nbC=animal==='Chat'?document.getElementById('inp-cats').value:'1';
+  if(!name){alert('Entrez votre prénom !');return;}
+  if(!phone){alert('Entrez votre téléphone !');return;}
+  if(!startD){alert('Choisissez une date de début !');return;}
+  if(!endD){alert('Choisissez une date de fin !');return;}
+  if(!freq){alert('Choisissez le nombre de visites !');return;}
+  if(!weekSel&&!durs.slice(0,freq).every(d=>d!==null)){alert('Choisissez la durée pour chaque visite !');return;}
+  for(let i=0;i<freq;i++){ if(!times[i]){alert(`Entrez le créneau de la visite ${i+1} !`);return;} }
+  for(let i=0;i<freq;i++){
+    const t=weekSel?TARIFS[0]:TARIFS.find(x=>x.id===durs[i]);
+    const c=hasConflict(times[i],t.min,i);
+    if(c){alert(`⚠️ Visite ${i+1} : ${c.r}. Modifiez le créneau.`);return;}
+  }
+  if(!race){alert('Indiquez la race de votre animal !');return;}
+  if(!pet){alert('Indiquez le prénom de votre animal !');return;}
+  const pr=calcPrice(),tp=pr?pr.total:70;
+  const code=genCode();
+  const visits=durs.slice(0,freq).map((id,i)=>{
+    const t=weekSel?TARIFS[0]:TARIFS.find(x=>x.id===id);
+    return {dur:t.label,durId:t.id,time:times[i]};
+  });
+  const resa={id:Date.now(),code,name,phone,email,pet,race,animal,nbChats:nbC,
+    startDate:fmtDate(startD),endDate:fmtDate(endD),days:getDays(),
+    visitFreq:freq,weekOffer:weekSel,visits,totalPrice:tp,msg,status:'pending',createdAt:new Date().toISOString()};
+  resas.unshift(resa);
+  localStorage.setItem('c_resas',JSON.stringify(resas));
+  const subj=encodeURIComponent(`Demande Pet Sitting – ${name} – ${fmtDate(startD)} au ${fmtDate(endD)}`);
+  const bod=encodeURIComponent(`Bonjour Chaïma,\n\nNouvelle demande ! Code : ${code}\n\nPropriétaire : ${name} · ${phone}${email?' · '+email:''}\nAnimal : ${animal} · ${race} · ${pet}${animal==='Chat'?' ('+nbC+' chats)':''}\n\nPériode : ${fmtDate(startD)} → ${fmtDate(endD)} (${getDays()} j)\n${visits.map((v,i)=>`Visite ${i+1} : ${v.dur} à ${v.time}`).join('\n')}\nTotal : ${tp}€\n\n${msg?'Infos : '+msg+'\n\n':''}⚠️ Organiser la rencontre préalable !\n`);
+  window.open(`mailto:chaimaslm27@gmail.com?subject=${subj}&body=${bod}`);
+  document.getElementById('modal-code').textContent=code;
+  document.getElementById('modal-txt').innerHTML=`<strong>${name}</strong>, demande du <strong>${fmtDate(startD)}</strong> au <strong>${fmtDate(endD)}</strong> pour <strong>${pet}</strong> enregistrée.<br><br><span style="font-size:16px;color:var(--v800);font-weight:700;">Total estimé : ${tp}€</span><br><span style="font-size:12px;color:var(--muted);">Chaïma vous contactera pour confirmer 🐾</span>`;
+  document.getElementById('modal').classList.add('show');
+  ['inp-name','inp-phone','inp-email','inp-race','inp-pet','inp-msg'].forEach(id=>document.getElementById(id).value='');
+  startD=null;endD=null;freq=0;durs=[null,null];times=['',''];weekSel=false;
+  updateDateBoxes();buildCalendar();
+  document.getElementById('visit-opts-section').style.display='none';
+  [1,2].forEach(i=>document.getElementById('vo-'+i).classList.remove('sel'));
+}
+function closeModal(){ document.getElementById('modal').classList.remove('show'); }
+
+// ══════ CHAT ══════════════════════════════════════════════
+function saveMsgs(){ localStorage.setItem('c_msgs',JSON.stringify(msgs)); }
+function escH(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function fmtT(ts){ const d=new Date(ts); return `${d.getDate()} ${MONTHS_S[d.getMonth()]} ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`; }
+
+function renderDiscTab(){
+  const da=document.getElementById('disc-admin'),dc=document.getElementById('disc-client'),dp=document.getElementById('disc-prompt');
+  if(adminIn){ da.style.display='block';dc.style.display='none';dp.style.display='none'; renderAdminChat(); }
+  else if(client){ dc.style.display='block';da.style.display='none';dp.style.display='none'; renderClientChat(); }
+  else { dp.style.display='block';dc.style.display='none';da.style.display='none'; }
+}
+function renderClientChat(){
+  const c=document.getElementById('chat-msgs');
+  const my=msgs.filter(m=>m.code===client.code);
+  if(!my.length){c.innerHTML='<div class="chat-empty">💬 Commencez la discussion avec Chaïma !</div>';return;}
+  c.innerHTML=my.map(m=>`<div class="msg ${m.from==='admin'?'from-a':'from-c'}"><div class="msg-bub">${escH(m.text)}</div><div class="msg-meta">${m.from==='admin'?'Chaïma':'Vous'} · ${fmtT(m.ts)}</div></div>`).join('');
+  c.scrollTop=c.scrollHeight;
+}
+function renderAdminChat(){
+  const list=document.getElementById('admin-chat-list');
+  const codes=[...new Set(msgs.map(m=>m.code))];
+  if(!codes.length){list.innerHTML='<div class="empty"><div class="big">💬</div><p>Aucun message.</p></div>';return;}
+  list.innerHTML=codes.map(code=>{
+    const ms=msgs.filter(m=>m.code===code);
+    const last=ms[ms.length-1];
+    const nm=ms.find(m=>m.from==='client')?.author||code;
+    const unr=ms.filter(m=>m.from==='client'&&!m.read).length;
+    return `<div class="admin-resa" style="cursor:pointer" onclick="toggleThread('${code}')">
+      <div class="ar-head"><div class="ar-name">💬 ${nm} <span style="font-size:11px;color:var(--muted);">(${code})</span></div>${unr>0?`<span class="resa-bdg bdg-p">${unr} nouveau${unr>1?'x':''}</span>`:''}</div>
+      <div style="font-size:12px;color:var(--muted);">${escH(last.text.substring(0,55))}${last.text.length>55?'…':''}</div>
+      <div id="thread-${code}" style="display:none;margin-top:10px;">
+        <div style="max-height:200px;overflow-y:auto;background:var(--bg);border-radius:var(--rads);padding:9px;" id="tmsg-${code}"></div>
+        <div style="display:flex;gap:7px;margin-top:7px;">
+          <input class="chat-inp" id="arep-${code}" placeholder="Répondre…" onkeydown="if(event.key==='Enter')adminReply('${code}')">
+          <button class="chat-send" onclick="adminReply('${code}')">➤</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function toggleThread(code){
+  const el=document.getElementById('thread-'+code);
+  if(!el) return;
+  const open=el.style.display==='none';
+  el.style.display=open?'block':'none';
+  if(open){
+    msgs.forEach(m=>{if(m.code===code&&m.from==='client')m.read=true;}); saveMsgs();
+    const c=document.getElementById('tmsg-'+code);
+    c.innerHTML=msgs.filter(m=>m.code===code).map(m=>`<div class="msg ${m.from==='admin'?'from-a':'from-c'}" style="margin-bottom:6px;${m.from!=='admin'?'align-self:flex-end;':''}"><div class="msg-bub">${escH(m.text)}</div><div class="msg-meta">${m.from==='admin'?'Chaïma':'Client'} · ${fmtT(m.ts)}</div></div>`).join('');
+    c.scrollTop=c.scrollHeight;
+  }
+}
+function adminReply(code){
+  const inp=document.getElementById('arep-'+code);
+  const t=inp.value.trim();if(!t)return;
+  msgs.push({id:Date.now(),code,from:'admin',author:'Chaïma',text:t,ts:new Date().toISOString(),read:true});
+  saveMsgs(); inp.value='';
+  toggleThread(code);toggleThread(code);
+}
+function sendMsg(){
+  if(!client) return;
+  const inp=document.getElementById('chat-inp');
+  const t=inp.value.trim();if(!t)return;
+  msgs.push({id:Date.now(),code:client.code,from:'client',author:client.name,text:t,ts:new Date().toISOString(),read:false});
+  saveMsgs(); inp.value=''; renderClientChat();
+}
+
+// ══════ AUTH ══════════════════════════════════════════════
+function openLoginModal(){ document.getElementById('admin-pw').value=''; document.getElementById('admin-err').style.display='none'; document.getElementById('login-modal').classList.add('show'); setTimeout(()=>document.getElementById('admin-pw').focus(),100); }
+function closeLoginModal(){ document.getElementById('login-modal').classList.remove('show'); }
+function tryAdminLogin(){
+  if(document.getElementById('admin-pw').value===ADMIN_PW){ adminIn=true; closeLoginModal(); showTab('resas'); }
+  else document.getElementById('admin-err').style.display='block';
+}
+function adminLogout(){ adminIn=false; showTab('resas'); }
+
+function clientLogin(){
+  const name=document.getElementById('cl-name').value.trim().toLowerCase();
+  const code=document.getElementById('cl-code').value.trim().toUpperCase();
+  const err=document.getElementById('cl-err');
+  const found=resas.find(r=>r.name.toLowerCase()===name&&r.code===code);
+  if(found){
+    client={name:found.name,code};err.style.display='none';
+    document.getElementById('resa-login-section').style.display='none';
+    document.getElementById('resa-client-logged').style.display='block';
+    document.getElementById('cl-welcome').textContent=`👋 Bonjour ${found.name} !`;
+    renderClientResas();
+  } else {err.textContent='Prénom ou code incorrect.';err.style.display='block';}
+}
+function clientLogout(){
+  client=null;
+  document.getElementById('resa-login-section').style.display='block';
+  document.getElementById('resa-client-logged').style.display='none';
+  document.getElementById('cl-name').value='';
+  document.getElementById('cl-code').value='';
+}
+
+// ══════ RESERVATIONS ══════════════════════════════════════
+function renderClientResas(){
+  const list=document.getElementById('resa-list');
+  if(!client){list.innerHTML='';return;}
+  const my=resas.filter(r=>r.code===client.code);
+  if(!my.length){list.innerHTML=`<div class="empty"><div class="big">🐾</div><p>Aucune réservation.</p></div>`;return;}
+  list.innerHTML=my.map(r=>{
+    const si=resas.indexOf(r);
+    const sl=r.status==='accepted'?'✅ Acceptée':r.status==='refused'?'❌ Refusée':'⏳ En attente';
+    const sc=r.status==='accepted'?'bdg-a':r.status==='refused'?'bdg-r':'bdg-p';
+    const vh=(r.visits||[]).map((v,i)=>`<div>Visite ${i+1} : ${v.dur}${v.time?' à <strong>'+v.time+'</strong>':''}</div>`).join('');
+    return `<div class="resa-card"><div class="resa-top"><div class="resa-icon">${r.animal==='Chat'?'🐱':'🐕'}</div><div class="resa-body"><div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:2px;"><div class="resa-nm">${r.name} — ${r.pet}</div><span class="resa-bdg ${sc}">${sl}</span></div><div class="resa-info">🐾 ${r.race} · ${r.animal}</div><div class="resa-info">📅 ${r.startDate} → ${r.endDate} · ${r.days}j</div><div class="creno-block"><strong>🕐 Créneaux</strong>${vh}</div><div class="resa-info" style="font-weight:700;color:var(--v800);margin-top:4px;">💰 Total : ${r.totalPrice}€</div><div class="resa-info">🔑 <span class="code-tag">${r.code}</span></div>${r.status==='pending'?`<button class="btn-cancel" onclick="cancelResa(${si})">Annuler</button>`:''}</div></div></div>`;
+  }).join('');
+}
+function cancelResa(i){ if(!confirm('Annuler cette réservation ?'))return; resas.splice(i,1); localStorage.setItem('c_resas',JSON.stringify(resas)); if(client)renderClientResas(); if(adminIn)renderAdminResas(); }
+
+function setFilter(f,btn){ afilt=f; document.querySelectorAll('.filt').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); renderAdminResas(); }
+function renderAdminResas(){
+  const list=document.getElementById('admin-resa-list');
+  const fl=afilt==='all'?resas:resas.filter(r=>r.status===afilt);
+  if(!fl.length){list.innerHTML=`<div class="empty"><div class="big">🐾</div><p>Aucune réservation ${afilt==='all'?'':afilt==='pending'?'en attente':afilt==='accepted'?'acceptée':'refusée'}.</p></div>`;return;}
+  list.innerHTML=fl.map(r=>{
+    const si=resas.indexOf(r);
+    const sl=r.status==='accepted'?'✅ Acceptée':r.status==='refused'?'❌ Refusée':'⏳ En attente';
+    const sc=r.status==='accepted'?'bdg-a':r.status==='refused'?'bdg-r':'bdg-p';
+    const vh=(r.visits||[]).map((v,i)=>`<div>Visite ${i+1} : <strong>${v.dur}</strong>${v.time?' à <strong>'+v.time+'</strong>':''}</div>`).join('');
+    const subj=encodeURIComponent(`Votre réservation pet sitting – ${r.pet}`);
+    const body=encodeURIComponent(`Bonjour ${r.name},\n\nConcernant votre demande de garde pour ${r.pet} du ${r.startDate} au ${r.endDate}.\n\n`);
+    return `<div class="admin-resa"><div class="ar-head"><div class="ar-name">${r.animal==='Chat'?'🐱':'🐕'} ${r.name} — ${r.pet}</div><span class="resa-bdg ${sc}">${sl}</span></div><div class="ar-info"><div>🐾 ${r.race} · ${r.animal}${r.animal==='Chat'&&parseInt(r.nbChats)>1?' ('+r.nbChats+' chats)':''}</div><div>📅 ${r.startDate} → ${r.endDate} · ${r.days}j · ${r.visitFreq} visite(s)/j</div><div style="background:var(--srf2);border-radius:7px;padding:7px 9px;margin:5px 0;border:1.5px solid var(--border);">🕐 ${vh}</div><div>💰 <strong style="color:var(--v800)">${r.totalPrice}€</strong> · 🔑 <span class="code-tag">${r.code}</span></div>${r.msg?`<div>💬 ${r.msg}</div>`:''}</div><div class="ar-acts">${r.status!=='accepted'?`<button class="btn-acc" onclick="setStatus(${si},'accepted')">✅ Accepter</button>`:''} ${r.status!=='refused'?`<button class="btn-ref" onclick="setStatus(${si},'refused')">❌ Refuser</button>`:''} <a href="tel:${r.phone}" class="btn-call">📞 ${r.phone}</a>${r.email?`<a href="mailto:${r.email}?subject=${subj}&body=${body}" class="btn-mail">✉️ Email</a>`:''} <button class="btn-cancel" onclick="cancelResa(${si})">Supprimer</button></div></div>`;
+  }).join('');
+}
+function setStatus(i,s){ resas[i].status=s; localStorage.setItem('c_resas',JSON.stringify(resas)); renderAdminResas(); }
+
+// ══════ TAB SWITCH ════════════════════════════════════════
+function showTab(t){
+  document.querySelectorAll('.tab').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tab-'+t).classList.add('active');
+  const tabs=['book','tarifs','resas','discussion','contact'];
+  document.querySelectorAll('nav button').forEach((b,i)=>b.classList.toggle('active',tabs[i]===t));
+  if(t==='resas'){
+    if(adminIn){ document.getElementById('resa-client').style.display='none'; document.getElementById('resa-admin').style.display='block'; renderAdminResas(); }
+    else { document.getElementById('resa-client').style.display='block'; document.getElementById('resa-admin').style.display='none'; if(client)renderClientResas(); }
+  }
+  if(t==='discussion') renderDiscTab();
+}
+
+// ══════ BOOT ══════════════════════════════════════════════
+boot();
+</script>
+</body>
+</html>
